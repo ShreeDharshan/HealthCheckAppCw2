@@ -1,0 +1,72 @@
+{% extends 'checkapp/base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="text-center">
+        <h2>Health Check Voting</h2>
+        <p class="lead">Please select a Session and vote for each area.</p>
+    </div>
+
+    <!-- Session Selection Dropdown -->
+    <form method="GET" class="text-center mb-4">
+        <label for="session">Select Session:</label>
+        <select name="session" id="session" onchange="this.form.submit()" class="form-select w-auto d-inline mx-2">
+            {% for session in sessions %}
+                <option value="{{ session.id }}" {% if session.id == selected_session.id %}selected{% endif %}>
+                    {{ session.date }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Voting Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="session" value="{{ selected_session.id }}">
+    
+        {% if cards %}
+            {% for card in cards %}
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ card.title }}</h5>
+    
+                        
+                        <input type="radio" class="btn-check" name="status_{{ card.id }}" id="green{{ card.id }}" value="green">
+                        <label class="btn btn-success m-1" for="green{{ card.id }}">Green 🟩</label>
+    
+                     
+                        <input type="radio" class="btn-check" name="status_{{ card.id }}" id="amber{{ card.id }}" value="amber">
+                        <label class="btn btn-warning m-1" for="amber{{ card.id }}">Amber 🟨</label>
+    
+                        
+                        <input type="radio" class="btn-check" name="status_{{ card.id }}" id="red{{ card.id }}" value="red">
+                        <label class="btn btn-danger m-1" for="red{{ card.id }}">Red 🟥</label>
+    
+                        <br><br>
+    
+                        
+                        <div class="form-check text-center mt-2">
+                            <input class="form-check-input" type="checkbox" name="improving_{{ card.id }}" id="improving{{ card.id }}">
+                            <label class="form-check-label" for="improving{{ card.id }}">Improving?</label>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Submit All Votes</button>
+            </div>
+    
+        {% else %}
+            <div class="alert alert-success text-center mt-5" role="alert">
+                <h4 class="alert-heading"> All Votes Completed!</h4>
+                <p>You have already submitted all your votes for this session.</p>
+            </div>
+        {% endif %}
+    </form>
+    
+
+</div>
+{% endblock %}

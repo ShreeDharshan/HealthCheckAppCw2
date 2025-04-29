@@ -1,0 +1,46 @@
+{% extends 'checkapp/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4 mb-4">Health Check Voting</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for card in cards %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ card.title }}</h5>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status_{{ card.id }}" value="green"
+                        {% if existing_votes.get(card.id) and existing_votes.get(card.id).status == 'green' %}checked{% endif %}>
+                        <label class="form-check-label">Green </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status_{{ card.id }}" value="amber"
+                        {% if existing_votes.get(card.id) and existing_votes.get(card.id).status == 'amber' %}checked{% endif %}>
+                        <label class="form-check-label">Amber </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status_{{ card.id }}" value="red"
+                        {% if existing_votes.get(card.id) and existing_votes.get(card.id).status == 'red' %}checked{% endif %}>
+                        <label class="form-check-label">Red </label>
+                    </div>
+
+                    <br><br>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="improving_{{ card.id }}"
+                        {% if existing_votes.get(card.id) and existing_votes.get(card.id).improving %}checked{% endif %}>
+                        <label class="form-check-label">Improving?</label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Submit Votes</button>
+    </form>
+</div>
+{% endblock %}

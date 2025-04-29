@@ -1,0 +1,36 @@
+{% extends 'checkapp/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Team Summary - {{ team.name }}</h2>
+
+    {% if summary %}
+        {% for card, counts in summary.items %}
+            <div class="card mt-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ card }}</h5>
+                    <div class="row justify-content-center">
+                        <div class="col-md-2">
+                            <div class="alert alert-success" role="alert">
+                                Green : {{ counts.green }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="alert alert-warning" role="alert">
+                                Amber : {{ counts.amber }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="alert alert-danger" role="alert">
+                                Red : {{ counts.red }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">No votes submitted yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
